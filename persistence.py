@@ -3,15 +3,18 @@ import matplotlib.pyplot as plt
 
 
 
-df = pd.read_csv('solar_small.csv', index_col=['timestamp'])
-df = df.drop(columns=['UTC'])
+df = pd.read_csv('solar_small.csv', index_col=['timestamp']).drop(columns=['UTC'])
+df2 = df.copy().iloc[1:]
+predictions = df.copy().shift().iloc[1:]
+pred_dict = {}
 
-dfcopy = df.copy().shift()
-df = df.iloc[1:]
-dfcopy = dfcopy.iloc[1:]
-differences = dfcopy.subtract(df)
-mape_df = abs(differences) / df
-RMSE = ((differences ** 2).mean() ** 0.5).mean()
-MAE = abs(differences).mean().mean()
-MAPE = mape_df.mean()
-print(RMSE)
+diff = predictions.subtract(df2)
+mdf = abs(diff) / df2.copy().replace(0,1)
+
+RMSE = ((diff ** 2).mean() ** 0.5).mean()
+MAE = abs(diff).mean().mean()
+MAPE = mdf.mean().mean()
+
+print('RMSE: ' + str(RMSE))
+print('MAE: ' + str(MAE))
+print('MAPE: ' + str(MAPE))
