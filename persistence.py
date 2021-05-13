@@ -3,13 +3,13 @@ import matplotlib.pyplot as plt
 
 
 
-df = pd.read_csv('solar_small.csv', index_col=['timestamp']).drop(columns=['UTC'])
-df2 = df.copy().iloc[1:]
-predictions = df.copy().shift().iloc[1:]
+df = pd.read_csv('solar_full.csv', index_col=['timestamp']).drop(columns=['UTC'])
+
+predictions = df.shift().iloc[1:]
 pred_dict = {}
 
-diff = predictions.subtract(df2)
-mdf = abs(diff) / df2.copy().replace(0,1)
+diff = predictions.subtract(df.iloc[1:])
+mdf = abs(diff) / df.replace(0,1)
 
 RMSE = ((diff ** 2).mean() ** 0.5).mean()
 MAE = abs(diff).mean().mean()
